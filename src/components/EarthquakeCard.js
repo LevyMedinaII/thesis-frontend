@@ -11,7 +11,14 @@ class EarthquakeCard extends Component{
     }
 
     componentDidMount() {
-        
+        const requestURL = `http://localhost:8080/${this.state.earthquakeId}`
+
+        axios.post(requestURL)
+            .then(res => {
+
+            }).catch(err => {
+                
+            })
     }
 
     render() {
