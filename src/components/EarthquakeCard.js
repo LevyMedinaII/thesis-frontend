@@ -1,39 +1,86 @@
 import React, { Component } from 'react'
-import axios from 'axios'
+import Dialog from 'material-ui/Dialog'
+import { Card, CardHeader, CardText } from 'material-ui/Card'
+
+import MapContainer from './MapContainer'
+
+const cardStyle = {
+    maxWidth: '400px',
+    margin: 20,
+    cardHeader: {
+        backgroundColor: '#00BCD4',
+    },
+    cardText: {
+        fontSize: 14   
+    }
+}
+
+const dialogStyle = {
+    bodyStyle: {
+        height: '75vh',
+        padding: 0
+    }
+}
 
 class EarthquakeCard extends Component{
     constructor(props){
         super(props)
 
         this.state = {
-            earthquakeId: this.props.earthquakeId
+            open: false
         }
+
+        this.handleExpand = this.handleExpand.bind(this)
     }
 
-    componentDidMount() {
-        const requestURL = `http://localhost:8080/${this.state.earthquakeId}`
+    handleOpen = () => {
+        this.setState({ open: true })
+    }
 
-        axios.post(requestURL)
-            .then(res => {
+    handleClose = () => {
+        this.setState({ open: false })
+    }
 
-            }).catch(err => {
-                
-            })
+    handleExpand(){
+        this.handleOpen()
     }
 
     render() {
         return(
             <div>
-                <Grid>
-                    {
-                        this.state.earthquakeId ?
-                            <Col xs={10} xsOffset={1}>
-                                <Row> Placeholder Name </Row>
-                            </Col>
-                        :   
-                            <div> Loading .. </div>
-                    }
-                </Grid>
+                <Card
+                    style={cardStyle}
+                    expanded={true}
+                    onExpandChange={() => this.handleExpand()}>
+                    <CardHeader
+                        className="earthquake-card-header"
+                        title={this.props.earthquake_name}
+                        subtitle={`${this.props.earthquake_lat}, ${this.props.earthquake_long}`}
+                        actAsExpander={true}
+                        style={cardStyle.cardHeader}
+                    />
+                    <CardText expandable={true} style={cardStyle.cardText}>
+                        <strong> Magnitude: </strong> {this.props.earthquake_magnitude}
+                        <br />
+                        <strong> PGA (g): </strong> {this.props.earthquake_pga}
+                        <br />
+                        <strong> PGV (cm): </strong> {this.props.earthquake_pgv}
+                        <br />
+                        <strong> PGD (cm): </strong> {this.props.earthquake_pgd}
+                    </CardText>
+                </Card>
+                <Dialog
+                    title={this.props.earthquake_name}
+                    modal={false}
+                    open={this.state.open}
+                    onRequestClose={this.handleClose}
+                    bodyStyle={dialogStyle.bodyStyle}
+                >
+                    <MapContainer
+                        earthquake_name={this.props.earthquake_name}
+                        earthquake_lat={this.props.earthquake_lat}
+                        earthquake_long={this.props.earthquake_long}/>
+                </Dialog>
             </div>
         )
     }
