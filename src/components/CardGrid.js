@@ -3,16 +3,15 @@ import axios from 'axios'
 
 import LoadingProgress from './LoadingProgress'
 import EarthquakeCard from './EarthquakeCard'
+import MapContainer from './MapContainer'
 
-const gridStyle = {
-    display: 'flex'
-}
+import { Row, Col } from 'react-bootstrap'
 
 class CardGrid extends Component{
     constructor(props){
         super(props)
         
-        this.state = {
+        this.state = {  
             earthquakeData: null
         }
 
@@ -38,24 +37,29 @@ class CardGrid extends Component{
             <div>
                 {
                     this.state.earthquakeData ?
-                        <div style={gridStyle}>
-                            {
-                                this.state.earthquakeData.map((value, key) => {
-                                    return(
-                                        <EarthquakeCard
-                                            key={key}
-                                            earthquake_name={value.name}
-                                            earthquake_lat={value.lat}
-                                            earthquake_long={value.long}
-                                            earthquake_pga={value.pga}
-                                            earthquake_pgv={value.pgv}
-                                            earthquake_pgd={value.pgd}
-                                            earthquake_magnitude={value.magnitude}
-                                        />
-                                    )
-                                })
-                            }
-                        </div>
+                        <Row style={{margin: 0, height: '90vh' }}>
+                            <Col lg={4} style={{ overflowY: 'scroll', height: '100%'}}>
+                                {
+                                    this.state.earthquakeData.map((value, key) => {
+                                        return(
+                                            <EarthquakeCard
+                                                key={key}
+                                                earthquake_name={value.name}
+                                                earthquake_lat={parseFloat(value.lat)}
+                                                earthquake_long={parseFloat(value.long)}
+                                                earthquake_pga={value.pga}
+                                                earthquake_pgv={value.pgv}
+                                                earthquake_pgd={value.pgd}
+                                                earthquake_magnitude={value.magnitude}
+                                            />
+                                        )
+                                    })
+                                }
+                            </Col>
+                            <Col lg={8}>
+                                <MapContainer earthquake_data={this.state.earthquakeData}/>
+                            </Col>
+                        </Row>
                     :
                         <LoadingProgress />
                 }

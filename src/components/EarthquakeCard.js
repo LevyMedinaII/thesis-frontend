@@ -1,24 +1,15 @@
 import React, { Component } from 'react'
-import Dialog from 'material-ui/Dialog'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
-
-import MapContainer from './MapContainer'
+import { Col } from 'react-bootstrap'
 
 const cardStyle = {
-    maxWidth: '400px',
-    margin: 20,
+    width: '100%',
+    marginTop: 20,
     cardHeader: {
         backgroundColor: '#00BCD4',
     },
     cardText: {
         fontSize: 14   
-    }
-}
-
-const dialogStyle = {
-    bodyStyle: {
-        height: '75vh',
-        padding: 0
     }
 }
 
@@ -47,7 +38,7 @@ class EarthquakeCard extends Component{
 
     render() {
         return(
-            <div>
+            <Col lg={12}>
                 <Card
                     style={cardStyle}
                     expanded={true}
@@ -69,19 +60,7 @@ class EarthquakeCard extends Component{
                         <strong> PGD (cm): </strong> {this.props.earthquake_pgd}
                     </CardText>
                 </Card>
-                <Dialog
-                    title={this.props.earthquake_name}
-                    modal={false}
-                    open={this.state.open}
-                    onRequestClose={this.handleClose}
-                    bodyStyle={dialogStyle.bodyStyle}
-                >
-                    <MapContainer
-                        earthquake_name={this.props.earthquake_name}
-                        earthquake_lat={this.props.earthquake_lat}
-                        earthquake_long={this.props.earthquake_long}/>
-                </Dialog>
-            </div>
+            </Col>
         )
     }
 }

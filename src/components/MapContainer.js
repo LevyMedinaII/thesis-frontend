@@ -1,47 +1,53 @@
-import React, { Component } from 'react'
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react'
+import React, { Component } from "react"
+import { compose, withProps } from "recompose"
+import { withScriptjs, withGoogleMap, GoogleMap, Circle, Marker } from "react-google-maps"
+import { MarkerClusterer } from "react-google-maps/lib/components/addons/MarkerClusterer"
 
-const mapContainerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '500px'
-}
-
-const mapStyle = {
-    width: '100%',
-    height: '80%'
-}
-export class MapContainer extends Component {
-    render() {
-        
-        return (
-            <div style={mapContainerStyle}>
-                <Map
-                    style={mapStyle}
-                    google={this.props.google}
-                    zoom={5}
-                    initialCenter={{
-                        lat: this.props.earthquake_lat,
-                        lng: this.props.earthquake_long
-                    }}>
+const MyMapComponent = compose(
+    withProps({
+        googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
+        loadingElement: <div style={{ marginTop: 20, height: `100%` }} />,
+        containerElement: <div style={{ marginTop: 20, height: `85vh` }} />,
+        mapElement: <div style={{ marginTop: 20, height: `100%` }} />,
+    }),
+    withScriptjs,
+    withGoogleMap
+    )((props) =>
+    <GoogleMap
+        defaultZoom={3}
+        defaultCenter={{ lat: 10, lng: 10 }}
+    >
+        <MarkerClusterer
+            averageCenter
+            enableRetinaIcons
+            gridSize={60}
+        >
+            {
+                props.earthquake_data.map((value, key) => (
                     <Marker
-                        name={this.props.earthquake_name}
-                        position={{ lat: this.props.earthquake_lat, lng: this.props.earthquake_long }} />
-                {
-                    
-                    // <InfoWindow onClose={this.onInfoWindowClose}>
-                    //     <div>
-                    //         <h1>{this.state.selectedPlace.name}</h1>
-                    //     </div>
-                    // </InfoWindow>
-                }
-                </Map>
-            </div>
+                        key={key}
+                        position={{
+                            lat: parseFloat(value.lat),
+                            lng: parseFloat(value.long)
+                        }}
+                    />
+                ))
+            }
+        </MarkerClusterer>
+    </GoogleMap>
+)
+
+class MapContainer extends Component {
+    constructor(props){
+        super(props)
+    }
+    render() {
+        return (
+            <MyMapComponent
+                isMarkerShown={true}
+                earthquake_data={this.props.earthquake_data}
+            />
         )
     }
 }
-
-export default GoogleApiWrapper({
-    apiKey: 'AIzaSyBrEbxas2QZaGrPz-S3vlf0mfJjkiBVBIc'
-})(MapContainer)
+export default MapContainer
