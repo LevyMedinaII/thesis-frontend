@@ -44,7 +44,6 @@ class CardGrid extends Component{
                                         return(
                                             <EarthquakeCard
                                                 key={key}
-                                                earthquake_name={value.name}
                                                 earthquake_lat={parseFloat(value.lat)}
                                                 earthquake_long={parseFloat(value.long)}
                                                 earthquake_pga={value.pga}
